@@ -776,18 +776,25 @@ class val StateStepRouter is TargetIdRouter
   //     consume new_outgoing_boundaries, _stateless_partitions, _sources,
   //     _data_receivers)
 
-  //!@ Probably remove this since we shouldn't be using an TargetIdRouter as a
-  // source of routes.
   fun routes(): Map[RoutingId, Consumer] val =>
-    """
-    The RoutingIdRouter has routing information for every step and boundary on
-    this worker.  However, the encapsulating actor will only have routes to
-    consumers that it actually has outputs to.  On state steps, for example,
-    we explicitly register only those outputs that upstream pre state steps
-    will ask to route messages to.  For this reason, we will not use this
-    method to determine known routes.
-    """
-    recover val Map[RoutingId, Consumer] end
+    let m = recover iso Map[RoutingId, Consumer] end
+    for (id, c) in _consumers.pairs() do
+      m(id) = c
+    end
+    for (id, pa) in _proxies.pairs() do
+      try
+        let ob = _outgoing_boundaries(pa.worker)?
+        m(id) = ob
+      else
+        Fail()
+      end
+    end
+    for spr in _stateless_partitions.values() do
+      for (id, c) in spr.routes().pairs() do
+        m(id) = c
+      end
+    end
+    consume m
 
   fun routes_not_in(router: TargetIdRouter): Map[RoutingId, Consumer] val =>
     let m = recover iso Map[RoutingId, Consumer] end

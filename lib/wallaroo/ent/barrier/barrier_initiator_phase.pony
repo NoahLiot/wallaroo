@@ -66,7 +66,9 @@ class BlockingBarrierInitiatorPhase is BarrierInitiatorPhase
   fun ref initiate_barrier(barrier_token: BarrierToken,
     result_promise: BarrierResultPromise)
   =>
-    if barrier_token == _wait_for_token then
+    if (barrier_token == _initial_token) or
+      (barrier_token == _wait_for_token)
+    then
       _initiator.initiate_barrier(barrier_token, result_promise)
     else
       _initiator.queue_barrier(barrier_token, result_promise)

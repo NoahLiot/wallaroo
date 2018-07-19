@@ -190,8 +190,9 @@ actor BarrierInitiator is Initializable
     this one is complete or, if `wait_for_token` is specified, once
     the specified token is received.
     """
-    //!@
-    None
+    _phase = BlockingBarrierInitiatorPhase(this, barrier_token,
+      wait_for_token)
+    _phase.initiate_barrier(barrier_token, result_promise)
 
   fun ref queue_barrier(barrier_token: BarrierToken,
     result_promise: BarrierResultPromise)
