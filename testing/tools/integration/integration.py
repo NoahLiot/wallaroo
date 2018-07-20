@@ -198,7 +198,7 @@ class TCPReceiver(StoppableThread):
     """
     __base_name__ = 'TCPReceiver'
 
-    def __init__(self, host, port=0, max_connections=100, mode='framed',
+    def __init__(self, host, port=0, max_connections=1000, mode='framed',
                  header_fmt='>I'):
         """
         Listen on a (host, port) pair for up to max_connections connections.
@@ -1460,6 +1460,9 @@ def pipeline_test(generator, expected, command, workers=1, sources=1,
                                                                  processed))
     except:
         logging.exception("Integration pipeline_test encountered an error")
+        #outputs = runners_output_format(runners, 10)
+        #logging.info("The last 10 lines of each worker were:\n\n{}".format(
+        #    outputs))
         raise
     finally:
         logging.info("Doing final cleanup")
@@ -1487,6 +1490,15 @@ def pipeline_test(generator, expected, command, workers=1, sources=1,
                                     "\n===\n{}"
                                     .format(alive_names, runner_join_timeout,
                                             outputs))
+        # check for workes that exited with a non-0 return code
+        bad_exit = []
+        for r in runners:
+            if r.poll() != 0:
+                bad_exit.append(r)
+        if bad_exit:
+            outputs = runners_output_format(bad_exit)
+            raise PipelineTestError("The following workers terminated with "
+                "a non-0 exit code:\n{}".format(outputs))
 
     # Return runner names and outputs if try block didn't have a return
     return_value = [(r.name, r.get_output()) for r in runners]

@@ -42,7 +42,7 @@ include $(rules_mk_path)
 
 build-testing-correctness-apps-alphabet_python: build-machida
 integration-tests-testing-correctness-apps-alphabet_python: build-testing-correctness-apps-alphabet_python
-integration-tests-testing-correctness-apps-alphabet_python: testing_alphabet_python_test
+#integration-tests-testing-correctness-apps-alphabet_python: testing_alphabet_python_test
 integration-tests-testing-correctness-apps-alphabet_python: testing_alphabet_python_test_toparallel
 
 testing_alphabet_python_test:
@@ -68,10 +68,10 @@ testing_alphabet_python_test_toparallel:
 		--framed-file-sender input.msg \
 		--framed-file-sender input.msg \
 		--validation-cmd 'python validate.py --expected output.json --repetitions 4 --output' \
-		--log-level error \
+		--log-level info \
 		--batch-size 10 \
 		--output 'received.txt' \
 		--command 'machida --application-module alphabet --to-parallel' \
-		--workers 10 \
+		--workers 100 \
 		--sink-expect 4000
 endif
