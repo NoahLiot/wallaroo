@@ -94,6 +94,7 @@ actor SnapshotInitiator is Initializable
     end
 
   be dispose() =>
+    @printf[I32]("Shutting down SnapshotInitiator\n".cstring())
     _timers.dispose()
 
 class _InitiateSnapshot is TimerNotify

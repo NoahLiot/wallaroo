@@ -66,4 +66,5 @@ actor AutoscaleInitiator
     _autoscale_token_in_progress = false
 
   be dispose() =>
+    @printf[I32]("Shutting down AutoscaleInitiator\n".cstring())
     None

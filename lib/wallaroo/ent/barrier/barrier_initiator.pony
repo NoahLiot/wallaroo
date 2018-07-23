@@ -438,6 +438,7 @@ actor BarrierInitiator is Initializable
     end
 
   be dispose() =>
+    @printf[I32]("Shutting down BarrierInitiator\n".cstring())
     None
 
   //!@
