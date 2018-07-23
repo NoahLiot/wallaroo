@@ -411,7 +411,7 @@ actor Step is (Producer & Consumer & Rerouter)
     _seq_id_generator.latest_for_run()
 
   fun ref unknown_key(state_name: String, key: Key,
-      routing_args: RoutingArguments)
+    routing_args: RoutingArguments)
   =>
     _pending_message_store.add(state_name, key, routing_args)
     _state_step_creator.report_unknown_key(this, state_name, key)
