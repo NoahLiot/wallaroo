@@ -93,6 +93,9 @@ actor SnapshotInitiator is Initializable
       Fail()
     end
 
+  be dispose() =>
+    _timers.dispose()
+
 class _InitiateSnapshot is TimerNotify
   let _si: SnapshotInitiator
 
