@@ -200,13 +200,11 @@ actor Step is (Producer & Consumer & Rerouter)
     // pending messages. Check to see if this is true and if we're now
     // ready to forward the barrier.
     if not _pending_message_store.has_pending() then
-      try
-        let bf = _barrier_forwarder as BarrierStepForwarder
+      match _barrier_forwarder
+      | let bf: BarrierStepForwarder =>
         if bf.barrier_in_progress() then
           bf.check_completion(inputs())
         end
-      else
-        Fail()
       end
     end
 
