@@ -52,7 +52,7 @@ class PendingMessageStore
     _pending_size = _pending_size - 1
     v
 
-  fun ref process_known_keys(producer: Producer ref, rerouter: Rerouter,
+  fun ref process_known_keys(producer: Producer ref,
     router: (Router | DataRouter))
   =>
     for (state_name, keys_routing_args) in _data_store.pairs() do
@@ -62,7 +62,7 @@ class PendingMessageStore
             keys_routing_args.remove(key)?
             _pending_size = _pending_size - 1
             for r in route_args.values() do
-              r(rerouter, producer)
+              r(producer)
             end
           end
         end
